@@ -34,10 +34,17 @@ if [[ $(checkUrl ${githubVersion}) -eq 0 ]] && [[ $(checkUrl ${githubScript}) -e
 	if [[ "${remoteVersion}" > "${actualLocalVersion}" ]]; then
 		[[ -e "${0}.old" ]] && rm ${0}.old
 		mv ${0} ${0}.old
-		command -p curl -Lsf >> ${0} && chmod +x ${0}
-		echo "Le script ${0} a été mis à jour en version ${remoteVersion}"
-	else
-		echo "Le script ${0} n'a pas été mis à jour. Vous disposez de la dernière version (${remoteVersion})."
+		command -p curl -Lsf ${githubScript} >> ${0} 
+		if [ $? -eq 0 ]; then
+			# echo "Le script ${0} a été mis à jour en version ${remoteVersion}"
+			chmod +x ${0}
+			command ${0} "$@"
+			exit $?
+		else
+			echo "Problème rencontré lors de la mise à jour de ${0}"
+		fi
+	# else
+	# echo "Le script ${0} n'a pas été mis à jour. Vous disposez de la dernière version (${remoteVersion})."
 	fi
 fi
 
