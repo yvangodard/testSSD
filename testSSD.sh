@@ -6,7 +6,15 @@ versionOSX=$(sw_vers -productVersion)
 scriptDir=$(dirname "${0}")
 scriptName=$(basename "${0}")
 scriptNameWithoutExt=$(echo "${scriptName}" | cut -f1 -d '.')
-actualVersion=0.4
+actualLocalVersion=0.4
+listOfDisks=$(diskutil list | grep "/dev/" | awk '{print $1}')
+hasSSD=0
+numberOfTrim=0
+trimEnabled=0
+trimNotEnabled=0
+githubRoot="https://raw.githubusercontent.com/yvangodard/testSSD/master/"
+githubVersion="${githubRoot%/}/version.txt"
+githubScript="${githubRoot%/}/testSSD.sh"
 
 # Exécutable seulement par root
 if [ `whoami` != 'root' ]; then
@@ -14,15 +22,28 @@ if [ `whoami` != 'root' ]; then
 	exit 1
 fi
 
+
+# Auto update du script
+function checkUrl() {
+  command -p curl -Lsf "$1" >/dev/null
+  echo "$?"
+}
+
+if [[ $(checkUrl ${githubVersion}) -eq 0 ]] && [[ $(checkUrl ${githubScript}) -eq 0 ]]; then
+	remoteVersion=$(command -p curl -Lsf ${githubVersion})
+	if [[ "${remoteVersion}" > "${actualLocalVersion}" ]]; then
+		[[ -e "${0}.old" ]] && rm ${0}.old
+		mv ${0} ${0}.old
+		command -p curl -Lsf >> ${0} && chmod +x ${0}
+		echo "Le script ${0} a été mis à jour en version ${remoteVersion}"
+	else
+		echo "Le script ${0} n'a pas été mis à jour. Vous disposez de la dernière version (${remoteVersion})."
+	fi
+fi
+
 # Changement du séparateur par défaut
 OLDIFS=$IFS
 IFS=$'\n'
-
-listOfDisks=$(diskutil list | grep "/dev/" | awk '{print $1}')
-hasSSD=0
-numberOfTrim=0
-trimEnabled=0
-trimNotEnabled=0
 
 echo "* Recherche SSD"
 # On vérifie le statut SSD avec la commande system_profiler car avec diskutil, certains SSD patchés pour le support de TRIM ne sont plus reconnus comme SSD
