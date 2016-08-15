@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Variables initialisation
+version="testSSD v0.4 - 2016, Yvan Godard [godardyvan@gmail.com]"
+versionOSX=$(sw_vers -productVersion)
+scriptDir=$(dirname "${0}")
+scriptName=$(basename "${0}")
+scriptNameWithoutExt=$(echo "${scriptName}" | cut -f1 -d '.')
+actualVersion=0.4
+
 # Exécutable seulement par root
 if [ `whoami` != 'root' ]; then
 	echo "Ce script doit être utilisé par le compte root. Utilisez 'sudo'."
