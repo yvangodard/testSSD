@@ -25,29 +25,25 @@ function checkUrl() {
   echo "$?"
 }
 
-# Auto-update script
-function autoUpdateThisScript () {
-	OLDIFS=$IFS
-	IFS=$'\n'
-	if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q ${0}) != $(curl -Lsf ${githubRemoteScript} | md5 -q) ]]; then
-		[[ -e "${0}.old" ]] && rm ${0}.old
-		mv ${0} ${0}.old
-		curl -Lsf ${githubScript} >> ${0}
-		if [ $? -eq 0 ]; then
-			chmod +x ${0}
-			exec "${0} $@"
-			exit $0
-		else
-			echo "Un problème a été rencontré pour mettre à jour ${0}."
-		fi
-	fi
-	IFS=$OLDIFS
-}
 
 
 # Changement du séparateur par défaut
 OLDIFS=$IFS
 IFS=$'\n'
+
+# Auto-update script
+if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q ${0}) != $(curl -Lsf ${githubRemoteScript} | md5 -q) ]]; then
+	[[ -e "${0}.old" ]] && rm ${0}.old
+	mv ${0} ${0}.old
+	curl -Lsf ${githubScript} >> ${0}
+	if [ $? -eq 0 ]; then
+		chmod +x ${0}
+		exec "${0} $@"
+		exit $0
+	else
+		echo "Un problème a été rencontré pour mettre à jour ${0}."
+	fi
+fi
 
 echo "* Recherche SSD"
 # On vérifie le statut SSD avec la commande system_profiler car avec diskutil, certains SSD patchés pour le support de TRIM ne sont plus reconnus comme SSD
