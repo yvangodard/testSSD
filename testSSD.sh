@@ -36,7 +36,7 @@ if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q ${0}) != $(curl 
 	curl -Lsf ${githubRemoteScript} >> ${0}
 	if [ $? -eq 0 ]; then
 		chmod +x ${0}
-		exec ${0} $@
+		exec "${0} $@"
 		exit $0
 	else
 		echo "Un problème a été rencontré pour mettre à jour ${0}."
