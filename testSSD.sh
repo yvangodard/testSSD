@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables initialisation
-version="testSSD v0.5 - 2016, Yvan Godard [godardyvan@gmail.com]"
+version="testSSD v0.6 - 2016, Yvan Godard [godardyvan@gmail.com]"
 versionOSX=$(sw_vers -productVersion)
 scriptDir=$(dirname "${0}")
 scriptName=$(basename "${0}")
