@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables initialisation
-version="testSSD v0.6 - 2016, Yvan Godard [godardyvan@gmail.com]"
+version="testSSD v0.5 - 2016, Yvan Godard [godardyvan@gmail.com]"
 versionOSX=$(sw_vers -productVersion)
 scriptDir=$(dirname "${0}")
 scriptName=$(basename "${0}")
@@ -36,7 +36,7 @@ if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q ${0}) != $(curl 
 	curl -Lsf ${githubRemoteScript} >> ${0}
 	if [ $? -eq 0 ]; then
 		chmod +x ${0}
-		exec "${0} $@"
+		exec ${0} $@
 		exit $0
 	else
 		echo "Un problème a été rencontré pour mettre à jour ${0}."
