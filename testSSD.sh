@@ -30,13 +30,13 @@ OLDIFS=$IFS
 IFS=$'\n'
 
 # Auto-update script
-if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q ${0}) != $(curl -Lsf ${githubRemoteScript} | md5 -q) ]]; then
-	[[ -e "${0}.old" ]] && rm ${0}.old
-	mv ${0} ${0}.old
-	curl -Lsf ${githubRemoteScript} >> ${0}
+if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q "$0") != $(curl -Lsf ${githubRemoteScript} | md5 -q) ]]; then
+	[[ -e "$0".old ]] && rm "$0".old
+	mv "$0" "$0".old
+	curl -Lsf ${githubRemoteScript} >> "$0"
 	if [ $? -eq 0 ]; then
-		chmod +x ${0}
-		exec "${0} $@"
+		chmod +x "$0"
+		exec "$0 $@"
 		exit $0
 	else
 		echo "Un problème a été rencontré pour mettre à jour ${0}."
