@@ -25,10 +25,9 @@ function checkUrl() {
   echo "$?"
 }
 
-# Changement du séparateur par défaut
+# Changement du séparateur par défaut et mise à jour auto
 OLDIFS=$IFS
 IFS=$'\n'
-
 # Auto-update script
 if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q "$0") != $(curl -Lsf ${githubRemoteScript} | md5 -q) ]]; then
 	[[ -e "$0".old ]] && rm "$0".old
@@ -40,6 +39,7 @@ if [[ $(checkUrl ${githubRemoteScript}) -eq 0 ]] && [[ $(md5 -q "$0") != $(curl 
 		exit $0
 	else
 		echo "Un problème a été rencontré pour mettre à jour ${0}."
+		echo "Nous poursuivons avec l'ancienne version du script."
 	fi
 fi
 
